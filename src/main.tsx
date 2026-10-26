@@ -18,6 +18,7 @@ function App() {
   const [reveal, setReveal] = useState<{slot: Slot;team: string} | null>(null)
   const [presentation, setPresentation] = useState(false)
   const [notice, setNotice] = useState('')
+  const [confirmReset, setConfirmReset] = useState(false)
   const boardRef = useRef<HTMLDivElement>(null)
   useEffect(() => save(state), [state])
   useEffect(() => { const fn = (event: KeyboardEvent) => { if (event.key === 'Escape') setPresentation(false); if ((event.key === ' ' || event.key === 'Enter') && state.phase === 'drawing' && !state.locked && !reveal) { event.preventDefault(); drawNext() } }; window.addEventListener('keydown', fn); return () => window.removeEventListener('keydown', fn) })
@@ -25,7 +26,8 @@ function App() {
   const drawNext = () => { if (state.locked || reveal || isComplete(state)) return; const next = nextAssignment(state); const item = next.drawOrder[next.drawOrder.length - 1]; setReveal(item); setTimeout(() => { setState(next); setReveal(null) }, 1050) }
   const updateTeam = (i: number, value: string) => setState(s => ({...s, teams: s.teams.map((t, index) => index === i ? value : t)}))
   const start = () => { const teams = state.teams.map(t => t.trim()); if (teams.some(t => !t) || new Set(teams.map(t => t.toLowerCase())).size !== 10) { setNotice('Enter 10 non-empty, unique team names before starting.'); return } setState(s => ({...s, teams, phase:'drawing', timestamp:new Date().toISOString()})); setEditing(false); setNotice('') }
-  const reset = () => { if (window.confirm('Reset the entire draw? This clears assignments and cannot be undone.')) { const fresh = emptyState(DEFAULT_TEAMS); setState(fresh); setEditing(true); setNotice('Draw reset. Team names can be edited again.') } }
+  const reset = () => setConfirmReset(true)
+  const confirmResetNow = () => { const fresh = emptyState(DEFAULT_TEAMS); setState(fresh); setEditing(true); setConfirmReset(false); setNotice('Draw reset. Team names can be edited again.') }
   const group = (number: 1|2) => DRAW_ORDER.filter(s => s.startsWith(`G${number}-`)).map(slot => ({slot, team: state.assignments[slot]}))
   const csv = ['slot,group,team', ...DRAW_ORDER.map(slot => `${slot},Group ${slot[1]},${displaySlot(slot,state.assignments)}`)].join('\n')
   const json = JSON.stringify({tournament:'WRSPL Season 3 — 2026', drawTimestamp:state.timestamp, teamList:state.teams, slotToTeam:state.assignments, drawOrder:state.drawOrder, locked:state.locked}, null, 2)
@@ -49,6 +51,7 @@ function App() {
     </main>
     <footer><span>WRSPL S3 · WESTFALEN ROYALS PREMIER SOFTBALL LEAGUE</span><span>LOCAL DEVICE DRAW · NO BACKEND REQUIRED</span></footer>
     {presentation && <button className="exit-present" onClick={() => setPresentation(false)}><X size={17}/> Exit presentation</button>}
+    {confirmReset && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="reset-title"><div className="confirm-modal"><span className="kicker">RESET DRAW</span><h2 id="reset-title">Start a new draw?</h2><p>This clears the current assignments and unlocks the team names. The action cannot be undone.</p><div><button className="outline-button" onClick={() => setConfirmReset(false)}>CANCEL</button><button className="primary-button" onClick={confirmResetNow}>RESET ENTIRE DRAW</button></div></div></div>}
   </div>
 }
 
