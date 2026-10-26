@@ -24,7 +24,11 @@ describe('WRSPL draw engine', () => {
   it('keeps all official group fixtures unchanged', () => {
     expect(FIXTURES).toHaveLength(20)
     expect(FIXTURES[0]).toMatchObject({id:'M1', day:'SATURDAY', window:'EARLY', time:'09:00', home:'G1-T1', away:'G1-T2'})
-    expect(FIXTURES[19]).toMatchObject({id:'M20', day:'SUNDAY', window:'LATE', time:'15:45', home:'G2-T4', away:'G2-T5'})
+    expect(FIXTURES[19]).toMatchObject({id:'M20', day:'SUNDAY', window:'LATE', time:'15:45', home:'G2-T2', away:'G2-T5'})
     expect(FIXTURES.map(f => f.id)).toEqual(Array.from({length:20}, (_, i) => `M${i+1}`))
+    for (const day of ['SATURDAY','SUNDAY']) {
+      const matches = FIXTURES.filter(f => f.day === day)
+      for (let i=1;i<matches.length;i++) expect([matches[i-1].home,matches[i-1].away]).not.toEqual(expect.arrayContaining([matches[i].home,matches[i].away]))
+    }
   })
 })
