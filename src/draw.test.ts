@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { DEFAULT_TEAMS, DRAW_ORDER, FIXTURES } from './fixtures'
+import { DEFAULT_TEAMS, DRAW_ORDER, FIXTURES, KNOCKOUT_FIXTURES } from './fixtures'
 import { emptyState, isComplete, nextAssignment, secureIndex } from './draw'
 
 const cryptoWith = (values: number[]): Crypto => ({ getRandomValues<T extends ArrayBufferView | null>(array: T): T { (array as unknown as Uint32Array)[0] = values.shift() ?? 0; return array } } as Crypto)
@@ -21,10 +21,14 @@ describe('WRSPL draw engine', () => {
     expect(secureIndex(max, cryptoWith([0xffffffff, limit - 1]))).toBe(2)
   })
 
-  it('keeps all official group fixtures unchanged', () => {
+  it('covers all 23 matches with a rest-safe operational schedule', () => {
     expect(FIXTURES).toHaveLength(20)
     expect(FIXTURES[0]).toMatchObject({id:'M1', day:'SATURDAY', window:'EARLY', time:'09:00', home:'G1-T1', away:'G1-T2'})
-    expect(FIXTURES[19]).toMatchObject({id:'M20', day:'SUNDAY', window:'LATE', time:'15:45', home:'G2-T2', away:'G2-T5'})
+    expect(FIXTURES[19]).toMatchObject({id:'M20', day:'SUNDAY', window:'EARLY', time:'13:30', home:'G2-T2', away:'G2-T5'})
+    expect(FIXTURES.filter(f => f.day === 'SATURDAY')).toHaveLength(13)
+    expect(FIXTURES.filter(f => f.day === 'SUNDAY')).toHaveLength(7)
+    expect(KNOCKOUT_FIXTURES).toHaveLength(3)
+    expect(KNOCKOUT_FIXTURES[KNOCKOUT_FIXTURES.length - 1]).toMatchObject({id:'FINAL', time:'16:30'})
     expect(FIXTURES.map(f => f.id)).toEqual(Array.from({length:20}, (_, i) => `M${i+1}`))
     for (const day of ['SATURDAY','SUNDAY']) {
       const matches = FIXTURES.filter(f => f.day === day)
