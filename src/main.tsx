@@ -13,6 +13,19 @@ const load = (): DrawState => { try { const value = localStorage.getItem(KEY); r
 const save = (state: DrawState) => { try { localStorage.setItem(KEY, JSON.stringify(state)) } catch { /* private mode/storage disabled */ } }
 const download = (name: string, body: string, type: string) => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([body], {type})); a.download = name; a.click(); URL.revokeObjectURL(a.href) }
 const displaySlot = (slot: string, assignments: Partial<Record<Slot,string>>) => assignments[slot as Slot] || slot
+const TEAM_JERSEY_COLORS: Record<string, {background:string; color:string; border:string}> = {
+  'NRW Super IV': {background:'#d41468', color:'#fff', border:'#a90d50'},
+  'Nord Titans': {background:'#3e8f6a', color:'#fff', border:'#2e6f52'},
+  'Dortmund Giants': {background:'#f3c400', color:'#17243a', border:'#c89f00'},
+  'Rhein Legends': {background:'#142d59', color:'#fff', border:'#0d1f40'},
+  'Ruhr Royals': {background:'#8e79a9', color:'#fff', border:'#695683'},
+  'Western Kings': {background:'#159cc3', color:'#fff', border:'#0e7897'},
+  'Thunder Hawks': {background:'#9c0f52', color:'#fff', border:'#760a3d'},
+  'Süd Strikers': {background:'#f45a24', color:'#fff', border:'#c94116'},
+  'Black Panthers': {background:'#343442', color:'#fff', border:'#20202a'},
+  'East Warriors': {background:'#6415ad', color:'#fff', border:'#47107d'},
+}
+const jerseyStyle = (team?:string) => team ? TEAM_JERSEY_COLORS[team] : undefined
 
 function App() {
   const [state, setState] = useState<DrawState>(load)
@@ -58,7 +71,7 @@ function App() {
 }
 
 function Setup({state,start}:{state:DrawState;start:()=>void}) { return <section className="setup-card"><div className="setup-copy"><span className="kicker">PREPARE THE DRAW</span><h2>Registered teams</h2><p>The official team list is fixed for this draw and cannot be edited in the public app.</p><div className="rule"><LockKeyhole size={15}/><span>Team names are locked for a consistent official result.</span></div></div><div className="team-grid">{state.teams.map((team,i)=><label key={i}><span>{String(i+1).padStart(2,'0')}</span><input value={team} readOnly aria-label={`Team ${i+1}`}/></label>)}</div><div className="setup-footer"><span><Users size={16}/> 10 participating teams</span><button className="primary-button" onClick={start}>START DRAW <Sparkles size={17}/></button></div></section> }
-function GroupPanel({number,items,active,reveal}:{number:1|2;items:{slot:Slot;team?:string}[];active?:Slot;reveal:{slot:Slot;team:string}|null}) { return <section className={`group-panel group-${number}`}><div className="group-heading"><div><span className="group-kicker">GROUP {number}</span><h3>{number === 1 ? 'The Royals' : 'The Challengers'}</h3></div><span className="group-count">{items.filter(x=>x.team).length} / 5</span></div><div className="slot-list">{items.map(({slot,team})=><div className={`slot ${active===slot?'active':''} ${reveal?.slot===slot?'reveal':''}`} key={slot}><span className="slot-id">{slot}</span><span className={team?'team-name':'empty-team'}>{reveal?.slot===slot ? reveal.team : team || 'Awaiting draw'}</span>{team && <span className="check">✓</span>}</div>)}</div><div className="group-footer"><span>{number === 1 ? 'SATURDAY + SUNDAY' : 'SATURDAY + SUNDAY'}</span><span>5 TEAMS</span></div></section> }
+function GroupPanel({number,items,active,reveal}:{number:1|2;items:{slot:Slot;team?:string}[];active?:Slot;reveal:{slot:Slot;team:string}|null}) { return <section className={`group-panel group-${number}`}><div className="group-heading"><div><span className="group-kicker">GROUP {number}</span><h3>{number === 1 ? 'The Royals' : 'The Challengers'}</h3></div><span className="group-count">{items.filter(x=>x.team).length} / 5</span></div><div className="slot-list">{items.map(({slot,team})=>{ const cellTeam=reveal?.slot===slot ? reveal.team : team; const colors=jerseyStyle(cellTeam); return <div className={`slot ${active===slot?'active':''} ${reveal?.slot===slot?'reveal':''} ${colors?'jersey-colored':''}`} style={colors} key={slot}><span className="slot-id">{slot}</span><span className={cellTeam?'team-name':'empty-team'} style={colors ? {color:colors.color} : undefined}>{cellTeam || 'Awaiting draw'}</span>{team && <span className="check">✓</span>}</div>})}</div><div className="group-footer"><span>{number === 1 ? 'SATURDAY + SUNDAY' : 'SATURDAY + SUNDAY'}</span><span>5 TEAMS</span></div></section> }
 function Results({state,setState,downloadPdf}:{state:DrawState;setState:React.Dispatch<React.SetStateAction<DrawState>>;downloadPdf:()=>void}) { return <section className="results-bar"><div><span className="kicker">OFFICIAL RESULT</span><h2>Ready to share with the league.</h2><p>Download a clean PDF summary for captains and players.</p></div><div className="result-actions"><button onClick={downloadPdf}><FileDown size={16}/> PDF SUMMARY</button><button className={state.locked?'locked-button':'lock-button'} disabled={state.locked} onClick={()=>setState(s=>({...s,locked:true,phase:'results'}))}>{state.locked?<Lock size={16}/>:<Unlock size={16}/>} {state.locked?'LOCKED':'LOCK DRAW'}</button></div></section> }
 function toMinutes(time:string) { const [hours,minutes]=time.split(':').map(Number); return hours*60+minutes }
 function fromMinutes(total:number) { const hours=Math.floor(total/60).toString().padStart(2,'0'); const minutes=(total%60).toString().padStart(2,'0'); return `${hours}:${minutes}` }
