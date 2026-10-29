@@ -1,4 +1,4 @@
-.reveal-card{position:relative;overflow:hidden;min-height:146px;justify-content:center;border:0!important;color:#fff!important;box-shadow:0 18px 35px #102a4c38,0 0 0 5px #ffffff,0 0 0 7px color-mix(in srgb,currentColor 30%,transparent);animation:reveal-card-in .55s cubic-bezier(.2,.8,.2,1) both!important}
+.reveal-card{position:relative;overflow:hidden;min-height:170px;justify-content:center;border:0!important;color:#fff!important;z-index:4;box-shadow:0 18px 35px #102a4c38,0 0 0 5px #ffffff,0 0 0 7px color-mix(in srgb,currentColor 30%,transparent);animation:reveal-card-in .85s cubic-bezier(.2,.8,.2,1) both!important}
 .reveal-card:after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#fff4 0%,transparent 38%,#0002 100%);pointer-events:none}
 .reveal-card svg,.reveal-card span,.reveal-card strong,.reveal-card em{position:relative;z-index:1}
 .reveal-card svg{filter:drop-shadow(0 2px 4px #0005);animation:reveal-sparkle 1s ease-in-out infinite}
@@ -12,7 +12,7 @@
 .reveal-particles i:nth-child(3){left:18%;bottom:18%;animation-delay:.2s;font-size:10px}
 .reveal-particles i:nth-child(4){right:18%;bottom:22%;animation-delay:.28s;font-size:16px}
 .reveal-particles i:nth-child(5){left:48%;top:8%;animation-delay:.35s;font-size:9px}
-@keyframes reveal-card-in{0%{opacity:0;transform:translateY(10px) scale(.9) rotate(-2deg)}60%{transform:translateY(-3px) scale(1.03) rotate(.5deg)}100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}}
+@keyframes reveal-card-in{0%{opacity:0;transform:translateY(18px) scale(.72) rotate(-4deg)}45%{opacity:1;transform:translateY(-6px) scale(1.1) rotate(1deg)}68%{transform:translateY(2px) scale(.98) rotate(-.5deg)}100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}}
 @keyframes reveal-sparkle{0%,100%{transform:rotate(-8deg) scale(1)}50%{transform:rotate(8deg) scale(1.2)}}
 @keyframes particle-pop{0%{opacity:0;transform:scale(.2) translateY(8px)}25%{opacity:1}100%{opacity:0;transform:scale(1.15) translateY(-13px)}}
 @media(prefers-reduced-motion:reduce){.reveal-card,.reveal-card svg,.reveal-particles i{animation:none}}

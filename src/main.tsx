@@ -39,7 +39,7 @@ function App() {
   useEffect(() => save(state), [state])
   useEffect(() => { const fn = (event: KeyboardEvent) => { if (event.key === 'Escape') setPresentation(false); if ((event.key === ' ' || event.key === 'Enter') && state.phase === 'drawing' && !state.locked && !reveal) { event.preventDefault(); drawNext() } }; window.addEventListener('keydown', fn); return () => window.removeEventListener('keydown', fn) })
   const remaining = useMemo(() => state.teams.filter(t => !state.drawOrder.some(x => x.team === t)), [state])
-  const drawNext = () => { if (state.locked || reveal || isComplete(state)) return; const next = nextAssignment(state); const item = next.drawOrder[next.drawOrder.length - 1]; setReveal(item); setTimeout(() => { setState(next); setReveal(null) }, 1050) }
+  const drawNext = () => { if (state.locked || reveal || isComplete(state)) return; const next = nextAssignment(state); const item = next.drawOrder[next.drawOrder.length - 1]; setReveal(item); setTimeout(() => { setState(next); setReveal(null) }, 2500) }
   const updateTeam = (i: number, value: string) => setState(s => ({...s, teams: s.teams.map((t, index) => index === i ? value : t)}))
   const start = () => { const teams = state.teams.map(t => t.trim()); if (teams.some(t => !t) || new Set(teams.map(t => t.toLowerCase())).size !== 10) { setNotice('Enter 10 non-empty, unique team names before starting.'); return } setState(s => ({...s, teams, phase:'drawing', timestamp:new Date().toISOString()})); setEditing(false); setNotice('') }
   const reset = () => setConfirmReset(true)
