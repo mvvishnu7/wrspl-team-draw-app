@@ -29,6 +29,8 @@ describe('WRSPL draw engine', () => {
     expect(FIXTURES.filter(f => f.day === 'SUNDAY')).toHaveLength(7)
     expect(KNOCKOUT_FIXTURES).toHaveLength(3)
     expect(KNOCKOUT_FIXTURES[KNOCKOUT_FIXTURES.length - 1]).toMatchObject({id:'FINAL', time:'16:30'})
+    const saturdayCounts = DRAW_ORDER.map(slot => FIXTURES.filter(f => f.day === 'SATURDAY' && (f.home === slot || f.away === slot)).length).sort((a,b) => a-b)
+    expect(saturdayCounts).toEqual([2,2,2,2,3,3,3,3,3,3])
     expect(FIXTURES.map(f => f.id)).toEqual(Array.from({length:20}, (_, i) => `M${i+1}`))
     for (const day of ['SATURDAY','SUNDAY']) {
       const matches = FIXTURES.filter(f => f.day === day)
