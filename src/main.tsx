@@ -65,7 +65,7 @@ function App() {
         {showResults && <Fixtures assignments={state.assignments}/>} 
       </>}
     </main>
-    <footer><span>WRSPL S3 · WESTFALEN ROYALS PREMIER SOFTBALL LEAGUE</span><span>LOCAL DEVICE DRAW · NO BACKEND REQUIRED</span></footer>
+    <footer><span>WRSPL S3 · WESTFALEN ROYALS SOFTBALL PREMIER LEAGUE</span><span>LOCAL DEVICE DRAW · NO BACKEND REQUIRED</span></footer>
     {presentation && <button className="exit-present" onClick={() => setPresentation(false)}><X size={17}/> Exit presentation</button>}
     {confirmReset && <div className="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="reset-title"><div className="confirm-modal"><span className="kicker">RESET DRAW</span><h2 id="reset-title">Start a new draw?</h2><p>This clears the current assignments and unlocks the team names. The action cannot be undone.</p><div><button className="outline-button" onClick={() => setConfirmReset(false)}>CANCEL</button><button className="primary-button" onClick={confirmResetNow}>RESET ENTIRE DRAW</button></div></div></div>}
   </div>
