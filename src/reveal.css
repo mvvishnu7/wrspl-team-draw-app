@@ -16,3 +16,5 @@
 @keyframes reveal-sparkle{0%,100%{transform:rotate(-8deg) scale(1)}50%{transform:rotate(8deg) scale(1.2)}}
 @keyframes particle-pop{0%{opacity:0;transform:scale(.2) translateY(8px)}25%{opacity:1}100%{opacity:0;transform:scale(1.15) translateY(-13px)}}
 @media(prefers-reduced-motion:reduce){.reveal-card,.reveal-card svg,.reveal-particles i{animation:none}}
+.fixture-team-name{border-radius:999px;padding:4px 7px;line-height:1.1}
+.team-color-tag{display:inline-block;border-radius:999px;padding:4px 8px;margin:3px 0 4px;line-height:1.1}
