@@ -15,7 +15,7 @@ const save = (state: DrawState) => { try { localStorage.setItem(KEY, JSON.string
 const download = (name: string, body: string, type: string) => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([body], {type})); a.download = name; a.click(); URL.revokeObjectURL(a.href) }
 const displaySlot = (slot: string, assignments: Partial<Record<Slot,string>>) => assignments[slot as Slot] || slot
 const TEAM_JERSEY_COLORS: Record<string, {background:string; color:string; border:string}> = {
-  'NRW Super IV': {background:'#d41468', color:'#fff', border:'#a90d50'},
+  'NRW Super VI': {background:'#d41468', color:'#fff', border:'#a90d50'},
   'Nord Titans': {background:'#3e8f6a', color:'#fff', border:'#2e6f52'},
   'Dortmund Giants': {background:'#f3c400', color:'#17243a', border:'#c89f00'},
   'Rhein Legends': {background:'#142d59', color:'#fff', border:'#0d1f40'},
